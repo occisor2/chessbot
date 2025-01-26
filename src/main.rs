@@ -3,11 +3,15 @@
 
 use board::Board;
 
-mod bitboard;
 mod board;
 mod moves;
 
 fn main() {
-    let b = Board::from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 0").unwrap();
+    let b = Board::from_fen("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b - - 0 0").unwrap();
     print!("{b}");
+    println!("Move Generation:");
+    let moves = b.gen_moves();
+    for m in moves {
+        println!("{m}");
+    }
 }

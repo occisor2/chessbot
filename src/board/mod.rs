@@ -1,10 +1,13 @@
 #![allow(dead_code)]
 #![allow(unused)]
 
-use crate::bitboard::BitBoard;
+use bitboard::BitBoard;
+
+mod bitboard;
+pub mod movegen;
 
 #[derive(Debug)]
-enum Piece {
+pub enum Piece {
     King,
     Queen,
     Rook,
@@ -14,7 +17,7 @@ enum Piece {
 }
 
 #[derive(Debug)]
-enum Color {
+pub enum Color {
     White,
     Black = 6,
 }
@@ -51,7 +54,7 @@ impl Board {
         let mut board = Board::new();
         let mut add_piece = |piece: Piece, color: Color, rank, file| {
             let index = piece as usize + color as usize;
-            board.pieces[index].set_bit(rank, file);
+            board.pieces[index].set_square(rank, file);
         };
 
         let parts: Vec<&str> = fen.split(' ').collect();
@@ -65,7 +68,7 @@ impl Board {
         }
 
         for (rank, rank_chars) in ranks.iter().rev().enumerate() {
-            let mut file: u8 = 0;
+            let mut file = 0;
             for ch in rank_chars.chars() {
                 if file > 7 {
                     return None;
@@ -99,6 +102,34 @@ impl Board {
         };
 
         Some(board)
+    }
+
+    fn get_pieces(&self, piece: Piece, color: Color) -> BitBoard {
+        self.pieces[piece as usize + color as usize]
+    }
+
+    fn white_pieces(&self) -> BitBoard {
+        let mut total = 0.into();
+        for i in 0..6 {
+            total |= self.pieces[i];
+        }
+        total
+    }
+
+    fn black_pieces(&self) -> BitBoard {
+        let mut total = 0.into();
+        for i in 6..self.pieces.len() {
+            total |= self.pieces[i];
+        }
+        total
+    }
+
+    fn occupied(&self) -> BitBoard {
+        self.white_pieces() | self.black_pieces()
+    }
+
+    fn empty(&self) -> BitBoard {
+        !self.occupied()
     }
 }
 
