@@ -40,6 +40,10 @@ impl BitBoard {
     pub fn trailing_zeros(&self) -> u8 {
         self.0.trailing_zeros() as u8
     }
+
+    pub fn clear_bit(&mut self, index: u8) {
+        self.0 &= !(1 << index);
+    }
 }
 
 impl Display for BitBoard {
@@ -53,6 +57,12 @@ impl Display for BitBoard {
             writeln!(f)?;
         }
         Ok(())
+    }
+}
+
+impl PartialEq<u64> for BitBoard {
+    fn eq(&self, other: &u64) -> bool {
+        self.0 == *other
     }
 }
 
