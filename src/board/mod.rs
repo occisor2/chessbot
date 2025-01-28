@@ -3,10 +3,11 @@
 
 use bitboard::BitBoard;
 
-mod bitboard;
+pub mod bitboard;
+pub mod fen;
 pub mod movegen;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Piece {
     King,
     Queen,
@@ -16,7 +17,7 @@ pub enum Piece {
     Pawn,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Color {
     White,
     Black = 6,
@@ -35,6 +36,9 @@ impl std::fmt::Display for Color {
 #[derive(Debug)]
 pub struct Board {
     side_to_move: Color,
+    white_castle_rights: (bool, bool), // (queen side, king side)
+    black_castle_rights: (bool, bool), // (queen side, king side)
+    valid_en_passant: Option<u8>,      // index on board of valid square
     half_moves: u32,
     full_moves: u32,
     pieces: [BitBoard; 12],
@@ -44,64 +48,13 @@ impl Board {
     pub fn new() -> Self {
         Self {
             side_to_move: Color::White,
+            white_castle_rights: (false, false),
+            black_castle_rights: (false, false),
+            valid_en_passant: None,
             half_moves: 0,
             full_moves: 0,
             pieces: [0.into(); 12], // even indexes are white, odd black
         }
-    }
-
-    pub fn from_fen(fen: &str) -> Option<Self> {
-        let mut board = Board::new();
-        let mut add_piece = |piece: Piece, color: Color, rank, file| {
-            let index = piece as usize + color as usize;
-            board.pieces[index].set_square(rank, file);
-        };
-
-        let parts: Vec<&str> = fen.split(' ').collect();
-        if parts.len() != 6 {
-            return None;
-        }
-
-        let ranks: Vec<&str> = parts[0].split('/').collect();
-        if ranks.len() != 8 {
-            return None;
-        }
-
-        for (rank, rank_chars) in ranks.iter().rev().enumerate() {
-            let mut file = 0;
-            for ch in rank_chars.chars() {
-                if file > 7 {
-                    return None;
-                }
-                match ch {
-                    'k' => add_piece(Piece::King, Color::Black, rank as u8, file),
-                    'q' => add_piece(Piece::Queen, Color::Black, rank as u8, file),
-                    'r' => add_piece(Piece::Rook, Color::Black, rank as u8, file),
-                    'b' => add_piece(Piece::Bishop, Color::Black, rank as u8, file),
-                    'n' => add_piece(Piece::Knight, Color::Black, rank as u8, file),
-                    'p' => add_piece(Piece::Pawn, Color::Black, rank as u8, file),
-                    'K' => add_piece(Piece::King, Color::White, rank as u8, file),
-                    'Q' => add_piece(Piece::Queen, Color::White, rank as u8, file),
-                    'R' => add_piece(Piece::Rook, Color::White, rank as u8, file),
-                    'B' => add_piece(Piece::Bishop, Color::White, rank as u8, file),
-                    'N' => add_piece(Piece::Knight, Color::White, rank as u8, file),
-                    'P' => add_piece(Piece::Pawn, Color::White, rank as u8, file),
-                    '1'..='8' => file += ch.to_digit(10)? as u8,
-                    _ => return None,
-                }
-                if !ch.is_numeric() {
-                    file += 1;
-                }
-            }
-        }
-
-        board.side_to_move = if parts[1].chars().next().unwrap() == 'w' {
-            Color::White
-        } else {
-            Color::Black
-        };
-
-        Some(board)
     }
 
     fn get_pieces(&self, piece: Piece, color: Color) -> BitBoard {

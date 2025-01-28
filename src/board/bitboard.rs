@@ -30,6 +30,10 @@ use std::{
 pub struct BitBoard(u64);
 
 impl BitBoard {
+    pub const fn new(number: u64) -> Self {
+        Self(number)
+    }
+
     pub fn set_index(&mut self, index: u8) {}
 
     pub fn set_square(&mut self, rank: u8, file: u8) {
@@ -60,12 +64,6 @@ impl Display for BitBoard {
     }
 }
 
-impl PartialEq<u64> for BitBoard {
-    fn eq(&self, other: &u64) -> bool {
-        self.0 == *other
-    }
-}
-
 impl BitAnd<u64> for BitBoard {
     type Output = BitBoard;
 
@@ -83,5 +81,11 @@ impl BitOrAssign<u64> for BitBoard {
 impl BitXorAssign<u64> for BitBoard {
     fn bitxor_assign(&mut self, rhs: u64) {
         self.0 ^= rhs;
+    }
+}
+
+impl PartialEq<u64> for BitBoard {
+    fn eq(&self, other: &u64) -> bool {
+        self.0 == *other
     }
 }
