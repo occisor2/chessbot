@@ -25,9 +25,9 @@ pub fn square_to_index(square: &str) -> Option<u8> {
     None
 }
 
-pub fn index_to_square(square: u8) -> String {
-    let rank = square / 8 + 1;
-    let file = square % 8;
+pub fn index_to_square(index: u8) -> String {
+    let rank = index / 8 + 1;
+    let file = index % 8;
     format!("{}{}", (file + b'a') as char, rank)
 }
 
@@ -44,7 +44,7 @@ pub enum Piece {
 #[derive(Clone, Copy, Debug)]
 pub enum Color {
     White,
-    Black = 6,
+    Black = 7,
 }
 
 impl std::fmt::Display for Color {
@@ -65,7 +65,11 @@ pub struct Board {
     valid_en_passant: Option<u8>,      // index on board of valid square
     half_moves: u32,
     full_moves: u32,
-    pieces: [BitBoard; 12],
+    // First 6 entrys are white's piece bitboards,
+    // the 7th is a mask of all the white pieces on the board.
+    // The next 6 entrys are black's piece bitboards,
+    // and the last is a mask of all of black's pieces.
+    pieces: [BitBoard; 14],
 }
 
 impl Board {
@@ -77,7 +81,7 @@ impl Board {
             valid_en_passant: None,
             half_moves: 0,
             full_moves: 0,
-            pieces: [0.into(); 12], // even indexes are white, odd black
+            pieces: [0.into(); 14],
         }
     }
 
@@ -99,6 +103,10 @@ impl Board {
             total |= self.pieces[i];
         }
         total
+    }
+
+    fn get_friendly(&self, color: Color) -> BitBoard {
+        self.pieces[color as usize + 6]
     }
 
     fn occupied(&self) -> BitBoard {

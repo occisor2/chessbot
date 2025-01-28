@@ -45,6 +45,10 @@ impl Board {
                 }
             }
         }
+
+        board.pieces[Color::White as usize + 6] = board.white_pieces();
+        board.pieces[Color::Black as usize + 6] = board.black_pieces();
+
         // Parse side to move
         board.side_to_move = if parts[1].chars().next().unwrap() == 'w' {
             Color::White
