@@ -28,6 +28,7 @@ impl Board {
     fn gen_pawns(&self, moves: &mut Vec<Move>) {
         self.gen_pawn_pushes(moves);
         self.gen_pawn_captures(moves);
+        self.gen_knights(moves);
     }
 
     fn gen_pawn_pushes(&self, moves: &mut Vec<Move>) {
@@ -102,7 +103,22 @@ impl Board {
     }
 
     fn gen_knights(&self, moves: &mut Vec<Move>) {
-        todo!()
+        fn extract(moves: &mut Vec<Move>, mut board: BitBoard, start: u8) {
+            while board != 0 {
+                let index = board.trailing_zeros();
+                moves.push(Move::new(index, start, None));
+                board.clear_bit(index);
+            }
+        }
+
+        let mut knights = self.get_pieces(Piece::Knight, self.side_to_move);
+        while knights != 0 {
+            let index = knights.trailing_zeros();
+            let attacks = KNIGHT_ATTACKS[index as usize];
+            let valid_attacks = attacks & !self.white_pieces();
+            extract(moves, valid_attacks, index);
+            knights.clear_bit(index);
+        }
     }
 }
 
