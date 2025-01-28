@@ -1,3 +1,5 @@
+use crate::board;
+
 #[derive(Debug)]
 pub enum Promotion {
     Queen,
@@ -23,17 +25,9 @@ impl Move {
     }
 
     pub fn lan_str(&self) -> String {
-        let from_rank = self.from / 8 + 1;
-        let from_file = self.from % 8;
-        let to_rank = self.to / 8 + 1;
-        let to_file = self.to % 8;
-        format!(
-            "{}{}{}{}",
-            (from_file + b'a') as char,
-            from_rank,
-            (to_file + b'a') as char,
-            to_rank
-        )
+        let from_square = board::index_to_square(self.from);
+        let to_square = board::index_to_square(self.to);
+        format!("{}{}", from_square, to_square)
     }
 }
 

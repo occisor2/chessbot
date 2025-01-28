@@ -7,6 +7,30 @@ pub mod bitboard;
 pub mod fen;
 pub mod movegen;
 
+pub fn square_to_index(square: &str) -> Option<u8> {
+    if square.chars().count() != 2 {
+        return None;
+    }
+
+    let file_char = square.chars().nth(0)?;
+    if let 'a'..='h' = file_char {
+        let file = file_char as u8 - b'a';
+        let rank = square.chars().nth(1)?.to_digit(10)? - 1;
+        if let 0..7 = rank {
+            let index = rank * 8 + file as u32;
+            return Some(index as u8);
+        }
+    }
+
+    None
+}
+
+pub fn index_to_square(square: u8) -> String {
+    let rank = square / 8 + 1;
+    let file = square % 8;
+    format!("{}{}", (file + b'a') as char, rank)
+}
+
 #[derive(Clone, Copy, Debug)]
 pub enum Piece {
     King,
@@ -94,7 +118,28 @@ impl Default for Board {
 
 impl std::fmt::Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "{}", self.side_to_move)?;
+        writeln!(f, "side {}", self.side_to_move)?;
+        writeln!(
+            f,
+            "white castle {}, {}",
+            self.white_castle_rights.0, self.white_castle_rights.1
+        )?;
+        writeln!(
+            f,
+            "black castle {}, {}",
+            self.black_castle_rights.0, self.black_castle_rights.1
+        )?;
+        writeln!(
+            f,
+            "en passant {}",
+            if self.valid_en_passant.is_none() {
+                "-".to_string()
+            } else {
+                index_to_square(self.valid_en_passant.unwrap())
+            }
+        )?;
+        writeln!(f, "half moves {}", self.half_moves)?;
+        writeln!(f, "full moves {}", self.full_moves)?;
         writeln!(f)?;
         for board in self.pieces {
             writeln!(f, "{board}")?;

@@ -1,4 +1,4 @@
-use super::{Board, Color, Piece};
+use super::{square_to_index, Board, Color, Piece};
 
 impl Board {
     pub fn from_fen(fen: &str) -> Option<Self> {
@@ -7,12 +7,12 @@ impl Board {
             let index = piece as usize + color as usize;
             board.pieces[index].set_square(rank, file);
         };
-
+        // Split apart the fen string
         let parts: Vec<&str> = fen.split(' ').collect();
         if parts.len() != 6 {
             return None;
         }
-
+        // Parse piece positions
         let ranks: Vec<&str> = parts[0].split('/').collect();
         if ranks.len() != 8 {
             return None;
@@ -45,12 +45,39 @@ impl Board {
                 }
             }
         }
-
+        // Parse side to move
         board.side_to_move = if parts[1].chars().next().unwrap() == 'w' {
             Color::White
         } else {
             Color::Black
         };
+        // Parse castling rights
+        let mut white_castle_rights = (false, false); // queen side, king side
+        let mut black_castle_rights = (false, false); // queen side, king side
+
+        if parts[2] != "-" {
+            for right in parts[2].chars() {
+                match right {
+                    'q' => black_castle_rights.0 = true,
+                    'k' => black_castle_rights.1 = true,
+                    'Q' => white_castle_rights.0 = true,
+                    'K' => white_castle_rights.1 = true,
+                    _ => return None,
+                }
+            }
+        }
+
+        board.white_castle_rights = white_castle_rights;
+        board.black_castle_rights = black_castle_rights;
+        // Parse En Passant target
+        board.valid_en_passant = if parts[3] == "-" {
+            None
+        } else {
+            Some(square_to_index(parts[3])?)
+        };
+        // Parse half and full time
+        board.half_moves = parts[4].parse().ok()?;
+        board.full_moves = parts[5].parse().ok()?;
 
         Some(board)
     }
