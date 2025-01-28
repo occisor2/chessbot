@@ -30,13 +30,21 @@ fn extract_moves(moves: &mut Vec<Move>, mut board: BitBoard, start: u8) {
 impl Board {
     pub fn gen_moves(&self) -> Vec<Move> {
         let mut moves: Vec<Move> = Vec::new();
+        self.gen_king(&mut moves);
         self.gen_knights(&mut moves);
         self.gen_pawns(&mut moves);
         moves
     }
 
     fn gen_king(&self, moves: &mut Vec<Move>) {
-        todo!()
+        let mut king = self.get_pieces(Piece::King, self.side_to_move);
+        while king != 0 {
+            let index = king.trailing_zeros();
+            let attacks = KING_ATTACKS[index as usize];
+            let valid_attacks = attacks & !self.get_friendly(self.side_to_move);
+            extract_moves(moves, valid_attacks, index);
+            king.clear_bit(index);
+        }
     }
 
     fn gen_knights(&self, moves: &mut Vec<Move>) {
