@@ -65,7 +65,7 @@ impl std::fmt::Display for Color {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Board {
     side_to_move: Color,
     white_castle_rights: (bool, bool), // (queen side, king side)
@@ -113,8 +113,8 @@ impl Board {
         total
     }
 
-    fn get_friendly(&self, color: Color) -> BitBoard {
-        self.pieces[color as usize + 6]
+    fn get_friendly(&self) -> BitBoard {
+        self.pieces[self.side_to_move as usize + 6]
     }
 
     fn occupied(&self) -> BitBoard {

@@ -41,7 +41,7 @@ impl Board {
         while king != 0 {
             let index = king.trailing_zeros();
             let attacks = KING_ATTACKS[index as usize];
-            let valid_attacks = attacks & !self.get_friendly(self.side_to_move);
+            let valid_attacks = attacks & !self.get_friendly();
             extract_moves(moves, valid_attacks, index);
             king.clear_bit(index);
         }
@@ -52,7 +52,7 @@ impl Board {
         while knights != 0 {
             let index = knights.trailing_zeros();
             let attacks = KNIGHT_ATTACKS[index as usize];
-            let valid_attacks = attacks & !self.get_friendly(self.side_to_move);
+            let valid_attacks = attacks & !self.get_friendly();
             extract_moves(moves, valid_attacks, index);
             knights.clear_bit(index);
         }
