@@ -1,7 +1,19 @@
-use super::bitboard::{BitBoard, FILEA, FILEH, RANK1, RANK8};
+use super::bitboard::{BitBoard, Square, FILEA, FILEH, RANK1, RANK8};
 
 pub const KNIGHT_ATTACKS: [BitBoard; 64] = gen_knight_attacks();
 pub const KING_ATTACKS: [BitBoard; 64] = gen_king_attacks();
+
+fn get_queen_attacks(square: Square) -> BitBoard {
+    todo!()
+}
+
+fn get_rook_attacks(square: Square) -> BitBoard {
+    todo!()
+}
+
+fn get_bishop_attacks(square: Square) -> BitBoard {
+    todo!()
+}
 
 const fn gen_knight_attacks() -> [BitBoard; 64] {
     let mut boards: [BitBoard; 64] = [BitBoard::new(0); 64];

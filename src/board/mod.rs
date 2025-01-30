@@ -1,11 +1,9 @@
-#![allow(dead_code)]
-#![allow(unused)]
-
 use bitboard::{BitBoard, Square};
 
 mod attacks;
 pub mod bitboard;
 pub mod fen;
+mod magic;
 pub mod movegen;
 
 #[derive(Clone, Copy, Debug)]
