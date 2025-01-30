@@ -103,28 +103,28 @@ impl Default for Board {
 
 impl std::fmt::Display for Board {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        writeln!(f, "side {}", self.side_to_move)?;
+        writeln!(f, "side: {}", self.side_to_move)?;
         writeln!(
             f,
-            "white castle {}, {}",
+            "white castle: {}, {}",
             self.white_castle_rights.0, self.white_castle_rights.1
         )?;
         writeln!(
             f,
-            "black castle {}, {}",
+            "black castle: {}, {}",
             self.black_castle_rights.0, self.black_castle_rights.1
         )?;
         writeln!(
             f,
-            "en passant {}",
+            "en passant: {}",
             if self.valid_en_passant.is_none() {
                 "-".to_string()
             } else {
                 index_to_square(self.valid_en_passant.unwrap())
             }
         )?;
-        writeln!(f, "half moves {}", self.half_moves)?;
-        writeln!(f, "full moves {}", self.full_moves)?;
+        writeln!(f, "half moves: {}", self.half_moves)?;
+        writeln!(f, "full moves: {}", self.full_moves)?;
         writeln!(f)?;
         for board in self.pieces {
             writeln!(f, "{board}")?;
