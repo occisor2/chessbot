@@ -5,7 +5,7 @@ impl Board {
         let mut board = Board::new();
         let mut add_piece = |piece: Piece, color: Color, rank, file| {
             let index = piece as usize + color as usize;
-            board.pieces[index].set_square(rank, file);
+            board.pieces[index].set_rank_file(rank, file);
         };
         // Split apart the fen string
         let parts: Vec<&str> = fen.split(' ').collect();

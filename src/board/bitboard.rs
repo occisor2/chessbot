@@ -36,7 +36,7 @@ impl BitBoard {
 
     pub fn set_index(&mut self, index: u8) {}
 
-    pub fn set_square(&mut self, rank: u8, file: u8) {
+    pub fn set_rank_file(&mut self, rank: u8, file: u8) {
         let mask = 1 << (rank * 8 + file);
         *self |= mask;
     }
