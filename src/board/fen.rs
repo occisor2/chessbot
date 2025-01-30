@@ -1,4 +1,4 @@
-use super::{Board, Color, Piece};
+use super::{Board, CastleRights, Color, Piece};
 
 impl Board {
     pub fn from_fen(fen: &str) -> Option<Self> {
@@ -56,16 +56,19 @@ impl Board {
             Color::Black
         };
         // Parse castling rights
-        let mut white_castle_rights = (false, false); // queen side, king side
-        let mut black_castle_rights = (false, false); // queen side, king side
+        let mut white_castle_rights = CastleRights {
+            king: false,
+            queen: false,
+        };
+        let mut black_castle_rights = white_castle_rights;
 
         if parts[2] != "-" {
             for right in parts[2].chars() {
                 match right {
-                    'q' => black_castle_rights.0 = true,
-                    'k' => black_castle_rights.1 = true,
-                    'Q' => white_castle_rights.0 = true,
-                    'K' => white_castle_rights.1 = true,
+                    'q' => black_castle_rights.queen = true,
+                    'k' => black_castle_rights.king = true,
+                    'Q' => white_castle_rights.queen = true,
+                    'K' => white_castle_rights.king = true,
                     _ => return None,
                 }
             }

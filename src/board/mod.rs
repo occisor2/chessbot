@@ -35,11 +35,17 @@ impl std::fmt::Display for Color {
 }
 
 #[derive(Clone, Copy, Debug)]
+pub struct CastleRights {
+    pub king: bool,
+    pub queen: bool,
+}
+
+#[derive(Clone, Copy, Debug)]
 pub struct Board {
     side_to_move: Color,
-    white_castle_rights: (bool, bool), // (queen side, king side)
-    black_castle_rights: (bool, bool), // (queen side, king side)
-    valid_en_passant: Option<Square>,  // index on board of valid square
+    white_castle_rights: CastleRights,
+    black_castle_rights: CastleRights,
+    valid_en_passant: Option<Square>,
     half_moves: u32,
     full_moves: u32,
     /// First 6 entrys are white's piece bitboards,
@@ -53,8 +59,14 @@ impl Board {
     pub fn new() -> Self {
         Self {
             side_to_move: Color::White,
-            white_castle_rights: (false, false),
-            black_castle_rights: (false, false),
+            white_castle_rights: CastleRights {
+                king: false,
+                queen: false,
+            },
+            black_castle_rights: CastleRights {
+                king: false,
+                queen: false,
+            },
             valid_en_passant: None,
             half_moves: 0,
             full_moves: 0,
@@ -85,7 +97,7 @@ impl Board {
         total
     }
 
-    /// Returns a mask of all friendly pieces of `side_to_move`
+    /// Returns a mask of all friendly pieces of [side_to_move][Self::side_to_move]
     fn friendly(&self) -> BitBoard {
         self.pieces[self.side_to_move as usize + 6]
     }
@@ -113,12 +125,12 @@ impl std::fmt::Display for Board {
         writeln!(
             f,
             "white castle: {}, {}",
-            self.white_castle_rights.0, self.white_castle_rights.1
+            self.white_castle_rights.queen, self.white_castle_rights.king
         )?;
         writeln!(
             f,
             "black castle: {}, {}",
-            self.black_castle_rights.0, self.black_castle_rights.1
+            self.black_castle_rights.queen, self.black_castle_rights.king
         )?;
         writeln!(
             f,
