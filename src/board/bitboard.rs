@@ -10,6 +10,18 @@ use std::{
     ops::{BitAnd, BitOrAssign, BitXorAssign, Shl},
 };
 
+pub const RANK8: u64 = 0xFF << 7 * 8;
+pub const RANK7: u64 = 0xFF << 6 * 8;
+pub const RANK6: u64 = 0xFF << 5 * 8;
+pub const RANK5: u64 = 0xFF << 4 * 8;
+pub const RANK4: u64 = 0xFF << 3 * 8;
+pub const RANK3: u64 = 0xFF << 2 * 8;
+pub const RANK2: u64 = 0xFF << 1 * 8;
+pub const RANK1: u64 = 0xFF;
+
+pub const FILEA: u64 = 0x8080808080808080;
+pub const FILEH: u64 = FILEA >> 7;
+
 /// Converts the name of board square to an index number.
 ///
 /// `square` must be a valid square name (e.g. e4) or `None` will be

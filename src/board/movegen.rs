@@ -1,23 +1,12 @@
-use super::BitBoard;
+use super::{
+    attacks::{KING_ATTACKS, KNIGHT_ATTACKS},
+    bitboard::{BitBoard, FILEA, FILEH, RANK1, RANK4, RANK5, RANK8},
+    Board,
+};
 use crate::{
-    board::{Board, Color, Piece},
+    board::{Color, Piece},
     moves::Move,
 };
-
-const RANK8: u64 = 0xFF << 7 * 8;
-const RANK7: u64 = 0xFF << 6 * 8;
-const RANK6: u64 = 0xFF << 5 * 8;
-const RANK5: u64 = 0xFF << 4 * 8;
-const RANK4: u64 = 0xFF << 3 * 8;
-const RANK3: u64 = 0xFF << 2 * 8;
-const RANK2: u64 = 0xFF << 1 * 8;
-const RANK1: u64 = 0xFF;
-
-const FILEA: u64 = 0x8080808080808080;
-const FILEH: u64 = FILEA >> 7;
-
-const KNIGHT_ATTACKS: [BitBoard; 64] = gen_knight_attacks();
-const KING_ATTACKS: [BitBoard; 64] = gen_king_attacks();
 
 fn extract_moves(moves: &mut Vec<Move>, mut board: BitBoard, start: u8) {
     while board != 0 {
@@ -133,48 +122,4 @@ impl Board {
     fn gen_pawn_promotions(&self, moves: &mut Vec<Move>) -> Vec<Move> {
         todo!()
     }
-}
-
-const fn gen_knight_attacks() -> [BitBoard; 64] {
-    let mut boards: [BitBoard; 64] = [BitBoard::new(0); 64];
-
-    let mut i = 0;
-    while i < 64 {
-        let knights = 1 << i;
-        // This is an implementation based of an algorithm presented on the chessprogramming wiki
-        // https://www.chessprogramming.org/Knight_Pattern
-        let l1 = (knights >> 1) & (0x7f7f7f7f7f7f7f7f);
-        let l2 = (knights >> 2) & (0x3f3f3f3f3f3f3f3f);
-        let r1 = (knights << 1) & (0xfefefefefefefefe);
-        let r2 = (knights << 2) & (0xfcfcfcfcfcfcfcfc);
-        let h1 = l1 | r1;
-        let h2 = l2 | r2;
-        let board = (h1 << 16) | (h1 >> 16) | (h2 << 8) | (h2 >> 8);
-        boards[i] = BitBoard::new(board);
-        i += 1;
-    }
-
-    boards
-}
-
-const fn gen_king_attacks() -> [BitBoard; 64] {
-    let mut boards: [BitBoard; 64] = [BitBoard::new(0); 64];
-
-    let mut i = 0;
-    while i < 64 {
-        let king = 1 << i;
-        let mut moves = 0;
-        moves ^= (king << 1) & !FILEH;
-        moves ^= (king >> 1) & !FILEA;
-        moves ^= (king << 8) & !RANK1;
-        moves ^= (king >> 8) & !RANK8;
-        moves ^= (king << 9) & !(RANK1 | FILEH);
-        moves ^= (king << 7) & !(RANK1 | FILEA);
-        moves ^= (king >> 9) & !(RANK8 | FILEA);
-        moves ^= (king >> 7) & !(RANK8 | FILEH);
-        boards[i] = BitBoard::new(moves);
-        i += 1;
-    }
-
-    boards
 }

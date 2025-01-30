@@ -3,6 +3,7 @@
 
 use bitboard::{index_to_square, BitBoard};
 
+mod attacks;
 pub mod bitboard;
 pub mod fen;
 pub mod movegen;
