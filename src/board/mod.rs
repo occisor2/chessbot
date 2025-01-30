@@ -62,10 +62,12 @@ impl Board {
         }
     }
 
-    fn get_pieces(&self, piece: Piece, color: Color) -> BitBoard {
+    /// Return the bitboard of piece kind `piece` for `color`
+    fn piece(&self, piece: Piece, color: Color) -> BitBoard {
         self.pieces[piece as usize + color as usize]
     }
 
+    /// Returns a mask of all white's pieces
     fn white_pieces(&self) -> BitBoard {
         let mut total = 0.into();
         for i in 0..6 {
@@ -74,6 +76,7 @@ impl Board {
         total
     }
 
+    /// Returns a mask of all black's pieces
     fn black_pieces(&self) -> BitBoard {
         let mut total = 0.into();
         for i in 6..self.pieces.len() {
@@ -82,14 +85,17 @@ impl Board {
         total
     }
 
-    fn get_friendly(&self) -> BitBoard {
+    /// Returns a mask of all friendly pieces of `side_to_move`
+    fn friendly(&self) -> BitBoard {
         self.pieces[self.side_to_move as usize + 6]
     }
 
+    /// Returns a mask of all pieces on the board
     fn occupied(&self) -> BitBoard {
         self.white_pieces() | self.black_pieces()
     }
 
+    /// Returns a mask of all the empty squares on the board
     fn empty(&self) -> BitBoard {
         !self.occupied()
     }
