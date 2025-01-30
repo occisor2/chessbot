@@ -56,9 +56,20 @@ impl Display for BitBoard {
             for file in 0..8 {
                 let index = 8 * rank + file;
                 let bit = (self.0 >> index) & 1;
+                if file == 0 {
+                    write!(f, "{} ", rank + 1)?;
+                }
                 write!(f, "{} ", if bit == 1 { '1' } else { '0' })?;
             }
             writeln!(f)?;
+
+            if rank == 0 {
+                write!(f, "  ")?;
+                for rank in 0..8 {
+                    write!(f, "{} ", (b'a' + rank) as char)?;
+                }
+                writeln!(f)?;
+            }
         }
         Ok(())
     }
