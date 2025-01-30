@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 #![allow(unused)]
 
-use bitboard::{index_to_square, BitBoard};
+use bitboard::{BitBoard, Square};
 
 mod attacks;
 pub mod bitboard;
@@ -39,13 +39,13 @@ pub struct Board {
     side_to_move: Color,
     white_castle_rights: (bool, bool), // (queen side, king side)
     black_castle_rights: (bool, bool), // (queen side, king side)
-    valid_en_passant: Option<u8>,      // index on board of valid square
+    valid_en_passant: Option<Square>,  // index on board of valid square
     half_moves: u32,
     full_moves: u32,
-    // First 6 entrys are white's piece bitboards,
-    // the 7th is a mask of all the white pieces on the board.
-    // The next 6 entrys are black's piece bitboards,
-    // and the last is a mask of all of black's pieces.
+    /// First 6 entrys are white's piece bitboards,
+    /// the 7th is a mask of all the white pieces on the board.
+    /// The next 6 entrys are black's piece bitboards,
+    /// and the last is a mask of all of black's pieces.
     pieces: [BitBoard; 14],
 }
 
@@ -120,7 +120,7 @@ impl std::fmt::Display for Board {
             if self.valid_en_passant.is_none() {
                 "-".to_string()
             } else {
-                index_to_square(self.valid_en_passant.unwrap())
+                self.valid_en_passant.unwrap().to_string()
             }
         )?;
         writeln!(f, "half moves: {}", self.half_moves)?;

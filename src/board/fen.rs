@@ -1,4 +1,4 @@
-use super::{bitboard::square_to_index, Board, Color, Piece};
+use super::{Board, Color, Piece};
 
 impl Board {
     pub fn from_fen(fen: &str) -> Option<Self> {
@@ -77,7 +77,7 @@ impl Board {
         board.valid_en_passant = if parts[3] == "-" {
             None
         } else {
-            Some(square_to_index(parts[3])?)
+            Some(parts[3].parse().ok()?)
         };
         // Parse half and full time
         board.half_moves = parts[4].parse().ok()?;

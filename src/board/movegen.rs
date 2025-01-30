@@ -11,7 +11,7 @@ use crate::{
 fn extract_moves(moves: &mut Vec<Move>, mut board: BitBoard, start: u8) {
     while board != 0 {
         let index = board.trailing_zeros();
-        moves.push(Move::new(index, start, None));
+        moves.push(Move::new(index.into(), start.into(), None));
         board.clear_bit(index);
     }
 }
@@ -61,7 +61,7 @@ impl Board {
                 } else {
                     index + 8 * offset
                 };
-                moves.push(Move::new(index, start_index, None));
+                moves.push(Move::new(index.into(), start_index.into(), None));
                 board.clear_bit(index);
             }
         }
@@ -97,7 +97,7 @@ impl Board {
                     (Direction::Left, Color::Black) => index + 9,
                     (Direction::Right, Color::Black) => index + 7,
                 };
-                moves.push(Move::new(index, start_index, None));
+                moves.push(Move::new(index.into(), start_index.into(), None));
                 board.clear_bit(index);
             }
         }
