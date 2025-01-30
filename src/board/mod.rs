@@ -117,6 +117,7 @@ impl std::fmt::Display for Board {
         writeln!(
             f,
             "en passant: {}",
+            // ugly solution but Square doesn't have an empty varaint, and it shouldn't
             if self.valid_en_passant.is_none() {
                 "-".to_string()
             } else {
