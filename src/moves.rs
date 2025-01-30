@@ -1,6 +1,6 @@
 use crate::board::bitboard::Square;
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub enum Promotion {
     Queen,
     Rook,
@@ -8,7 +8,7 @@ pub enum Promotion {
     Knight,
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug)]
 pub struct Move {
     pub to: Square,
     pub from: Square,
