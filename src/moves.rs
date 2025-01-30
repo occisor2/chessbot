@@ -1,4 +1,4 @@
-use crate::board;
+use crate::board::bitboard::index_to_square;
 
 #[derive(Debug)]
 pub enum Promotion {
@@ -25,8 +25,8 @@ impl Move {
     }
 
     pub fn lan_str(&self) -> String {
-        let from_square = board::index_to_square(self.from);
-        let to_square = board::index_to_square(self.to);
+        let from_square = index_to_square(self.from);
+        let to_square = index_to_square(self.to);
         format!("{}{}", from_square, to_square)
     }
 }

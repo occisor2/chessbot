@@ -10,6 +10,38 @@ use std::{
     ops::{BitAnd, BitOrAssign, BitXorAssign, Shl},
 };
 
+/// Converts the name of board square to an index number.
+///
+/// `square` must be a valid square name (e.g. e4) or `None` will be
+/// returned.
+pub fn square_to_index(square: &str) -> Option<u8> {
+    if square.chars().count() != 2 {
+        return None;
+    }
+
+    let file_char = square.chars().nth(0)?;
+    if let 'a'..='h' = file_char {
+        let file = file_char as u8 - b'a';
+        let rank = square.chars().nth(1)?.to_digit(10)?;
+        if let 1..=8 = rank {
+            let index = (rank - 1) * 8 + file as u32;
+            return Some(index as u8);
+        }
+    }
+
+    None
+}
+
+/// Converts a board index number into a board square name.
+///
+/// Squares are mapped using Little-Endian Rank-File mapping, so for
+/// example, a1 would be at index 0 and a2 index 8.
+pub fn index_to_square(index: u8) -> String {
+    let rank = index / 8 + 1;
+    let file = index % 8;
+    format!("{}{}", (b'a' + file) as char, rank)
+}
+
 #[derive(
     Debug,
     Clone,

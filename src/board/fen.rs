@@ -1,4 +1,4 @@
-use super::{square_to_index, Board, Color, Piece};
+use super::{bitboard::square_to_index, Board, Color, Piece};
 
 impl Board {
     pub fn from_fen(fen: &str) -> Option<Self> {
