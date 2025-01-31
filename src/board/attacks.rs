@@ -3,15 +3,38 @@ use super::bitboard::{BitBoard, Square, FILEA, FILEH, RANK1, RANK8};
 pub const KNIGHT_ATTACKS: [BitBoard; 64] = gen_knight_attacks();
 pub const KING_ATTACKS: [BitBoard; 64] = gen_king_attacks();
 
-fn get_queen_attacks(square: Square) -> BitBoard {
+/// Get all moves for a king on `square`
+///
+/// `occ`, occupancy, should be a [Bitboard] of all pieces on the board.
+pub fn get_king_attacks(square: Square, occ: BitBoard) -> BitBoard {
     todo!()
 }
 
-fn get_rook_attacks(square: Square) -> BitBoard {
+/// Get all moves for a queen on `square`
+///
+/// `occ`, occupancy, should be a [Bitboard] of all pieces on the board.
+pub fn get_queen_attacks(square: Square, occ: BitBoard) -> BitBoard {
     todo!()
 }
 
-fn get_bishop_attacks(square: Square) -> BitBoard {
+/// Get all moves for a rook on `square`
+///
+/// `occ`, occupancy, should be a [Bitboard] of all pieces on the board.
+pub fn get_rook_attacks(square: Square, occ: BitBoard) -> BitBoard {
+    todo!()
+}
+
+/// Get all moves for a bishop on `square`
+///
+/// `occ`, occupancy, should be a [Bitboard] of all pieces on the board.
+pub fn get_bishop_attacks(square: Square, occ: BitBoard) -> BitBoard {
+    todo!()
+}
+
+/// Get all moves for a knight on `square`
+///
+/// `occ`, occupancy, should be a [Bitboard] of all pieces on the board.
+pub fn get_knight_attacks(square: Square, occ: BitBoard) -> BitBoard {
     todo!()
 }
 

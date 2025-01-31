@@ -22,6 +22,9 @@ pub const RANK1: u64 = 0xFF;
 pub const FILEA: u64 = 0x8080808080808080;
 pub const FILEH: u64 = FILEA >> 7;
 
+/// Maps chess board names to indexes in a BitBoard
+///
+/// Bitboard are indexed using Little-Endian Rank-File Mapping
 #[rustfmt::skip]
 #[derive(Clone, Copy, Debug, FromPrimitive)]
 pub enum Square {
